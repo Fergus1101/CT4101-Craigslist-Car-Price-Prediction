@@ -1,0 +1,5 @@
+# Ignore raw data files and virtual environments
+*.csv
+*.zip
+.venv/
+/data/
