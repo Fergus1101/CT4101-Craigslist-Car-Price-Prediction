@@ -2,8 +2,32 @@
 
 This project predicts the resale price of used vehicles listed on Craigslist. It
 uses supervised machine-learning regression models and investigates the effects
-of features such as vehicle age, mileage, manufacturer, condition, fuel type,
+of features such as vehicle age, mileage, manufacturer, fuel type,
 and transmission.
+
+## Project structure
+
+```text
+CT4101-Craigslist-Car-Price-Prediction/
+├── data/
+│   ├── raw/
+│   │   └── vehicles.csv
+│   └── processed/
+│       └── craigslist_30k_sample.csv
+├── notebooks/
+│   ├── 01_data_sampling.ipynb
+│   ├── 02_data_audit.ipynb
+│   └── 03_preprocessing_and_baseline.ipynb
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+- `data/raw/` contains the downloaded Kaggle dataset.
+- `data/processed/` contains the reproducible 30,000-row working sample.
+- `notebooks/` contains the sequential data-sampling, auditing, preprocessing,
+  modelling, and evaluation workflow.
+- `requirements.txt` lists the Python and Jupyter dependencies.
 
 ## Dataset
 
@@ -81,8 +105,11 @@ from top to bottom before opening the next one:
 The first notebook loads `data/raw/vehicles.csv`, draws 30,000 rows with
 `random_state=42`, and writes the sample. The audit notebook checks its shape,
 duplicates, missing values, and price quality. The final notebook filters
-invalid prices, preprocesses numerical and categorical features, fits the
-baseline model, and reports evaluation results and diagnostic plots.
+invalid prices, engineers vehicle-age and mileage-per-year features, splits the
+data into training and test sets, and preprocesses numerical and categorical
+features. It compares a median dummy regressor, Ridge regression, and Random
+Forest models using five-fold cross-validation, tunes the Random Forest, and
+reports held-out test results with diagnostic plots and Ridge coefficients.
 
 ### Running notebooks from the command line
 
@@ -108,6 +135,7 @@ data/raw/vehicles.csv                         # downloaded source dataset
 data/processed/craigslist_30k_sample.csv     # generated 30,000-row sample
 ```
 
-The sample should contain **30,000 rows and 26 columns**. The audit and baseline
-results, tables, and plots are displayed and retained as notebook cell outputs;
-the current notebooks do not export separate model, image, or report files.
+The sample should contain **30,000 rows and 26 columns**. The audit and model
+results, model-comparison tables, and plots are displayed and retained as
+notebook cell outputs; the current notebooks do not export separate model,
+image, or report files.
