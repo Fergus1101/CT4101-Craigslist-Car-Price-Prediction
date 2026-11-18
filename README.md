@@ -17,7 +17,7 @@ CT4101-Craigslist-Car-Price-Prediction/
 ├── notebooks/
 │   ├── 01_data_sampling.ipynb
 │   ├── 02_data_audit.ipynb
-│   └── 03_preprocessing_and_baseline.ipynb
+│   └── 03_model_comparison_and_evaluation.ipynb
 ├── .gitignore
 ├── requirements.txt
 └── README.md
@@ -86,12 +86,14 @@ If extraction creates a nested copy of `vehicles.csv`, move it into
 The raw and generated CSV files are intentionally excluded from Git because of
 their size.
 
-## Milestone 2 workflow
+## Project workflow
 
-Start JupyterLab from the repository root:
+Start JupyterLab from the `notebooks/` directory because the notebooks use
+paths relative to that directory:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
+Set-Location .\notebooks
 jupyter lab
 ```
 
@@ -100,7 +102,7 @@ from top to bottom before opening the next one:
 
 1. [`notebooks/01_data_sampling.ipynb`](notebooks/01_data_sampling.ipynb)
 2. [`notebooks/02_data_audit.ipynb`](notebooks/02_data_audit.ipynb)
-3. [`notebooks/03_preprocessing_and_baseline.ipynb`](notebooks/03_preprocessing_and_baseline.ipynb)
+3. [`notebooks/03_model_comparison_and_evaluation.ipynb`](notebooks/03_model_comparison_and_evaluation.ipynb)
 
 The first notebook loads `data/raw/vehicles.csv`, draws 30,000 rows with
 `random_state=42`, and writes the sample. The audit notebook checks its shape,
@@ -117,14 +119,14 @@ The same workflow can be executed without opening the JupyterLab interface:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
-jupyter nbconvert --to notebook --execute --inplace .\notebooks\01_data_sampling.ipynb
-jupyter nbconvert --to notebook --execute --inplace .\notebooks\02_data_audit.ipynb
-jupyter nbconvert --to notebook --execute --inplace .\notebooks\03_preprocessing_and_baseline.ipynb
+Set-Location .\notebooks
+jupyter nbconvert --to notebook --execute --inplace .\01_data_sampling.ipynb
+jupyter nbconvert --to notebook --execute --inplace .\02_data_audit.ipynb
+jupyter nbconvert --to notebook --execute --inplace .\03_model_comparison_and_evaluation.ipynb
 ```
 
-Run these commands from the repository root. The notebooks use paths relative
-to `notebooks/`, so changing to another working directory can cause file-not
-found errors.
+Run these commands from the repository root; the `Set-Location` command ensures
+that the notebooks' relative paths resolve correctly.
 
 ## Expected outputs
 
