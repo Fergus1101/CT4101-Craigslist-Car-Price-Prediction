@@ -141,3 +141,5 @@ The sample should contain **30,000 rows and 26 columns**. The audit and model
 results, model-comparison tables, and plots are displayed and retained as
 notebook cell outputs; the current notebooks do not export separate model,
 image, or report files.
+
+Assistance Declaration: In accordance with module policy, I declare the use of Gemini as an AI coding assistant during this checkpoint for syntax checking and debugging. All modeling choices, hyperparameter searches, evaluation scripts, and result interpretations were independently chosen, verified, and executed by the author. 
