@@ -37,7 +37,7 @@ The project uses the **Craigslist Cars and Trucks** dataset from Kaggle:
 
 The dataset was published by Austin Reese and is available under the CC0 Public
 Domain dedication. The downloaded file is `vehicles.csv`. The full dataset has
-approximately 426,880 rows and 26 columns. Milestone 2 works with a reproducible
+approximately 426,880 rows and 26 columns. This project works with a reproducible
 sample of 30,000 rows selected with `random_state=42`.
 
 ## Requirements
