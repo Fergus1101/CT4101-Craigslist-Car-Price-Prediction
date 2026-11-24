@@ -142,4 +142,24 @@ results, model-comparison tables, and plots are displayed and retained as
 notebook cell outputs; the current notebooks do not export separate model,
 image, or report files.
 
+## Submission status
+
+This project is complete and ready for submission. The full workflow has been
+implemented and executed, including data sampling, auditing, preprocessing,
+feature engineering, model comparison, hyperparameter tuning, and final
+evaluation.
+
+The Random Forest model achieved the strongest performance on the held-out test
+set:
+
+--- Final Model Comparison ---
+        Model    CV RMSE  CV RMSE Std     CV MAE   CV R2  Test RMSE   Test MAE  Test R2
+        Dummy 14789.1732     422.5478 11171.1358 -0.0547 14786.2273 11173.7637  -0.0518
+        Ridge 10958.6792     388.2102  7673.2535  0.4206 10853.5998  7655.7307   0.4333
+Random Forest  7412.1536     302.2059  4487.0510  0.7348  7327.5853  4326.8712   0.7417
+
+The final Random Forest configuration used `max_depth=None` and
+`min_samples_leaf=1`. Results and diagnostic plots are retained in the final
+notebook.
+
 Assistance Declaration: In accordance with module policy, I declare the use of Gemini as an AI coding assistant during this checkpoint for syntax checking and debugging. All modeling choices, hyperparameter searches, evaluation scripts, and result interpretations were independently chosen, verified, and executed by the author. 
