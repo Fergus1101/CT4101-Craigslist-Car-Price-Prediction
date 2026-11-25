@@ -1,165 +1,157 @@
-# CT4101 Craigslist Car Price Prediction
-
-This project predicts the resale price of used vehicles listed on Craigslist. It
-uses supervised machine-learning regression models and investigates the effects
-of features such as vehicle age, mileage, manufacturer, fuel type,
-and transmission.
-
-## Project structure
-
-```text
-CT4101-Craigslist-Car-Price-Prediction/
-├── data/
-│   ├── raw/
-│   │   └── vehicles.csv
-│   └── processed/
-│       └── craigslist_30k_sample.csv
-├── notebooks/
-│   ├── 01_data_sampling.ipynb
-│   ├── 02_data_audit.ipynb
-│   └── 03_model_comparison_and_evaluation.ipynb
-├── .gitignore
-├── requirements.txt
-└── README.md
+# Predicting Used Vehicle Prices on Craigslist
+ 
+**CT4101 Machine Learning Portfolio Project** · Fergus O'Donoghue · Student ID 23412416
+ 
+## 1. What this project does (in plain English)
+ 
+Can we predict what a used car is listed for on Craigslist, using details such as its age, mileage, brand and fuel type? I compare three models on a 30,000-listing sample of a public Kaggle dataset:
+ 
+| Model | What it is |
+|---|---|
+| Dummy | Always predicts the median price. This is the baseline to beat. |
+| Ridge regression | A simple linear model. |
+| Random Forest | A non-linear model made of many decision trees. |
+ 
+**Headline result:** the Random Forest was best. On listings it had never seen, it was off by about **$4,327** on average (MAE) and explained about **74%** of the variation in price (R² = 0.74). Vehicle age and mileage mattered most. It is least reliable for very cheap cars (under $5,000) and very expensive cars (over $40,000).
+ 
+## 2. Option A: just read the results (nothing to install or run)
+ 
+All results are already saved inside the notebooks, and GitHub displays them directly in your browser. Click a notebook below and scroll down.
+ 
+| Notebook | What you will see |
+|---|---|
+| [`notebooks/01_data_sampling.ipynb`](notebooks/01_data_sampling.ipynb) | Takes a reproducible 30,000-row sample from the 426,880-row dataset. |
+| [`notebooks/02_data_audit.ipynb`](notebooks/02_data_audit.ipynb) | Data checks: size, missing values, duplicates, odd prices. |
+| [`notebooks/03_model_comparison_and_evaluation.ipynb`](notebooks/03_model_comparison_and_evaluation.ipynb) | **The main notebook.** Preprocessing, the three models, cross-validation, results table, error analysis and feature importance. |
+ 
+If you only have time for one thing, open notebook 03 and read the section headings and the results table.
+ 
+## 3. Option B: re-run everything from scratch
+ 
+The data files are **not** stored on GitHub because they are large, so you need to download the dataset first. Allow about 20-30 minutes, most of which is waiting for the models to train.
+ 
+### What you need before starting
+ 
+- **Python 3.13** (tested with 3.13.15). Download it from <https://www.python.org/downloads/>. On Windows, tick "Add Python to PATH" during installation.
+- A free **Kaggle account** (needed to download the dataset).
+- About 1.5 GB of free disk space.
+### Step 1: Get the code
+ 
+Click the green **Code** button on the GitHub page, then **Download ZIP**, and unzip it. (If you use Git, `git clone` works too.) Open a terminal **inside the unzipped folder**:
+ 
+- **Windows:** open the folder in File Explorer, click the address bar, type `powershell`, and press Enter.
+- **Mac:** right-click the folder and choose "New Terminal at Folder".
+### Step 2: Download the dataset
+ 
+1. Go to <https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data> and click **Download**. You will get a file called `craigslist-carstrucks-data.zip`.
+2. Unzip it. Inside is a file called **`vehicles.csv`**.
+3. Create the folders and move the file into place. In your terminal:
+   **Windows (PowerShell):**
+```powershell
+New-Item -ItemType Directory -Force data\raw
 ```
-
-- `data/raw/` contains the downloaded Kaggle dataset.
-- `data/processed/` contains the reproducible 30,000-row working sample.
-- `notebooks/` contains the sequential data-sampling, auditing, preprocessing,
-  modelling, and evaluation workflow.
-- `requirements.txt` lists the Python and Jupyter dependencies.
-
-## Dataset
-
-The project uses the **Craigslist Cars and Trucks** dataset from Kaggle:
-
-<https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data>
-
-The dataset was published by Austin Reese and is available under the CC0 Public
-Domain dedication. The downloaded file is `vehicles.csv`. The full dataset has
-approximately 426,880 rows and 26 columns. This project works with a reproducible
-sample of 30,000 rows selected with `random_state=42`.
-
-## Requirements
-
-- Python **3.13** (the workflow has been tested with Python 3.13.15)
-- pip
-- JupyterLab
-
-The commands below use PowerShell on Windows. Run them from the repository root
-(`CT4101-Craigslist-Car-Price-Prediction`):
-
+   **Mac / Linux:**
+```bash
+mkdir -p data/raw
+```
+4. Move `vehicles.csv` into the `data/raw` folder. The final path must be exactly:
+```text
+data/raw/vehicles.csv
+```
+ 
+### Step 3: Set up Python (one-off)
+ 
+**Windows (PowerShell):**
 ```powershell
 py -3.13 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
-
-If PowerShell prevents activation because of its execution policy, either allow
-scripts for the current user or invoke the environment's Python directly:
-
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-.\.venv\Scripts\Activate.ps1
+**Mac / Linux:**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
-
-## Download the data
-
-Download the dataset from the Kaggle link above and extract it so that the raw
-file has exactly this path:
-
-```text
-data/raw/vehicles.csv
+You will know it worked when `(.venv)` appears at the start of your terminal line.
+ 
+> If Windows says scripts are disabled, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer Y, and repeat the `Activate.ps1` line.
+ 
+### Step 4: Run it. Choose ONE of the two methods
+ 
+**Method 1: one command (easiest).** From the project folder, with `(.venv)` showing:
+ 
+```bash
+python run_all.py
 ```
-
-For users with the Kaggle CLI already configured, the equivalent commands are:
-
-```powershell
-python -m pip install kaggle
-kaggle datasets download -d austinreese/craigslist-carstrucks-data -p data/raw
-Expand-Archive .\data\raw\craigslist-carstrucks-data.zip -DestinationPath .\data\raw
-```
-
-If extraction creates a nested copy of `vehicles.csv`, move it into
-`data/raw/vehicles.csv` and remove the archive before running the notebooks.
-The raw and generated CSV files are intentionally excluded from Git because of
-their size.
-
-## Project workflow
-
-Start JupyterLab from the `notebooks/` directory because the notebooks use
-paths relative to that directory:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-Set-Location .\notebooks
+ 
+This runs all three notebooks in the correct order and stops with a clear message if something is missing. It takes roughly 10-20 minutes. The saved outputs inside the notebooks are refreshed with the new results.
+ 
+**Method 2: manually in JupyterLab.**
+ 
+```bash
+cd notebooks
 jupyter lab
 ```
-
-Open and run the notebooks in this exact order. Run every cell in each notebook
-from top to bottom before opening the next one:
-
-1. [`notebooks/01_data_sampling.ipynb`](notebooks/01_data_sampling.ipynb)
-2. [`notebooks/02_data_audit.ipynb`](notebooks/02_data_audit.ipynb)
-3. [`notebooks/03_model_comparison_and_evaluation.ipynb`](notebooks/03_model_comparison_and_evaluation.ipynb)
-
-The first notebook loads `data/raw/vehicles.csv`, draws 30,000 rows with
-`random_state=42`, and writes the sample. The audit notebook checks its shape,
-duplicates, missing values, and price quality. The final notebook filters
-invalid prices, engineers vehicle-age and mileage-per-year features, splits the
-data into training and test sets, and preprocesses numerical and categorical
-features. It compares a median dummy regressor, Ridge regression, and Random
-Forest models using five-fold cross-validation, tunes the Random Forest, and
-reports held-out test results with diagnostic plots and Ridge coefficients.
-
-### Running notebooks from the command line
-
-The same workflow can be executed without opening the JupyterLab interface:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-Set-Location .\notebooks
-jupyter nbconvert --to notebook --execute --inplace .\01_data_sampling.ipynb
-jupyter nbconvert --to notebook --execute --inplace .\02_data_audit.ipynb
-jupyter nbconvert --to notebook --execute --inplace .\03_model_comparison_and_evaluation.ipynb
-```
-
-Run these commands from the repository root; the `Set-Location` command ensures
-that the notebooks' relative paths resolve correctly.
-
-## Expected outputs
-
-After the complete workflow, the following data files should exist:
-
+ 
+A browser tab opens. Open the notebooks **in numerical order (01, then 02, then 03)**. In each one, choose **Run → Run All Cells** from the menu and wait until it finishes before opening the next. (Notebook 01 creates `data/processed/craigslist_30k_sample.csv`, which notebooks 02 and 03 need.)
+ 
+### Step 5: Check you got the same results
+ 
+Random seeds are fixed (`random_state=42`), so you should see these numbers at the end of notebook 03 (tiny differences are possible if library versions differ):
+ 
+| Model | Test MAE | Test RMSE | Test R² |
+|---|---|---|---|
+| Dummy | $11,174 | $14,786 | -0.05 |
+| Ridge | $7,656 | $10,854 | 0.43 |
+| Random Forest | $4,327 | $7,328 | 0.74 |
+ 
+Other checks: the sample has **30,000 rows and 26 columns**, and **26,974 rows** remain after removing prices below $500 or above $100,000.
+ 
+### If something goes wrong
+ 
+| Message or problem | Fix |
+|---|---|
+| `FileNotFoundError ... vehicles.csv` | The dataset is not at `data/raw/vehicles.csv`. Re-check Step 2 (folder names and spelling). |
+| `FileNotFoundError ... craigslist_30k_sample.csv` | Notebook 01 has not been run yet. Run it first (or use `python run_all.py`). |
+| `py` / `python` is not recognised | Python is not installed, or "Add to PATH" was not ticked. Reinstall Python. |
+| Scripts are disabled (Windows) | See the note under Step 3. |
+| `ModuleNotFoundError` | The environment is not active or packages are missing. Repeat Step 3. |
+| Training seems slow | Normal. The Random Forest tuning cell (30 model fits) takes several minutes. |
+ 
+## 4. Project structure
+ 
 ```text
-data/raw/vehicles.csv                         # downloaded source dataset
-data/processed/craigslist_30k_sample.csv     # generated 30,000-row sample
+CT4101-Craigslist-Car-Price-Prediction/
+├── notebooks/
+│   ├── 01_data_sampling.ipynb
+│   ├── 02_data_audit.ipynb
+│   └── 03_model_comparison_and_evaluation.ipynb
+├── run_all.py            # optional: runs the three notebooks in order
+├── requirements.txt      # Python packages and exact versions
+├── .gitignore
+├── README.md
+└── data/                 # NOT on GitHub (see Step 2)
+    ├── raw/vehicles.csv
+    └── processed/craigslist_30k_sample.csv
 ```
-
-The sample should contain **30,000 rows and 26 columns**. The audit and model
-results, model-comparison tables, and plots are displayed and retained as
-notebook cell outputs; the current notebooks do not export separate model,
-image, or report files.
-
-## Submission status
-
-This project is complete and ready for submission. The full workflow has been
-implemented and executed, including data sampling, auditing, preprocessing,
-feature engineering, model comparison, hyperparameter tuning, and final
-evaluation.
-
-The Random Forest model achieved the strongest performance on the held-out test
-set:
-
---- Final Model Comparison ---
-        Model    CV RMSE  CV RMSE Std     CV MAE   CV R2  Test RMSE   Test MAE  Test R2
-        Dummy 14789.1732     422.5478 11171.1358 -0.0547 14786.2273 11173.7637  -0.0518
-        Ridge 10958.6792     388.2102  7673.2535  0.4206 10853.5998  7655.7307   0.4333
-Random Forest  7412.1536     302.2059  4487.0510  0.7348  7327.5853  4326.8712   0.7417
-
-The final Random Forest configuration used `max_depth=None` and
-`min_samples_leaf=1`. Results and diagnostic plots are retained in the final
-notebook.
-
-Assistance Declaration: In accordance with module policy, I declare the use of Gemini as an AI coding assistant during this checkpoint for syntax checking and debugging. All modeling choices, hyperparameter searches, evaluation scripts, and result interpretations were independently chosen, verified, and executed by the author. 
+ 
+## 5. Dataset
+ 
+**Craigslist Cars and Trucks Data**, Austin Reese, Kaggle: <https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data>. Licence: CC0 (public domain). About 426,880 listings and 26 columns; a reproducible 30,000-row sample is used here. Prices are self-reported **asking** prices from 2021, not final sale prices.
+ 
+## 6. Intended use, limitations and recommendation (short model card)
+ 
+- **Intended use:** a rough guide to a fair asking price for cars listed between $500 and $100,000, not an automated valuation.
+- **Evaluation:** 80/20 train/test split, 5-fold cross-validation on the training data only, test set used once at the end. Preprocessing lives inside the model pipelines, so no information leaks from the test set.
+- **Main limitation:** errors are largest at the price extremes (median error about 64% for cars under $5,000; MAE about $11,300 above $40,000). Placeholder prices and rare cars are hard to predict from the available features.
+- **Other risks:** 2021 data means today's prices will differ (concept drift); missing information such as accident history; regional price differences captured by the `state` feature.
+- **Recommendation:** pilot with a human in the loop, such as a price suggestion a seller can override. Do not deploy as an automated valuation. Before wider use, retrain on recent listings and monitor input data and prediction errors.
+## 7. Assistance declaration
+ 
+*(Keep this identical to the declaration in the submitted report.)*
+ 
+In accordance with module policy, I declare the use of two AI tools. I used Gemini for syntax checking and debugging. I used Claude to review my notebook and writeup and this README. The data preparation, model choices, main modelling workflow, checking of all figures against the notebook output, and final interpretations are my own, and I can explain all submitted code.
+ 
