@@ -150,8 +150,7 @@ CT4101-Craigslist-Car-Price-Prediction/
 - **Other risks:** 2021 data means today's prices will differ (concept drift); missing information such as accident history; regional price differences captured by the `state` feature.
 - **Recommendation:** pilot with a human in the loop, such as a price suggestion a seller can override. Do not deploy as an automated valuation. Before wider use, retrain on recent listings and monitor input data and prediction errors.
 ## 7. Assistance declaration
- 
-*(Keep this identical to the declaration in the submitted report.)*
+
  
 In accordance with module policy, I declare the use of two AI tools. I used Gemini for syntax checking and debugging. I used Claude to review my notebook and writeup and this README. The data preparation, model choices, main modelling workflow, checking of all figures against the notebook output, and final interpretations are my own, and I can explain all submitted code.
  
